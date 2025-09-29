@@ -1,24 +1,28 @@
 #include "Freq.h"
+#include <cwctype> // iswalnum towlower
+
+std::map<std::wstring, int> FrequencyCalculator::calculate_stream(std::wistream& in, int& countWords) {
+    std::map<std::wstring, int> freq;
+    std::wstring word;
+    countWords = 0;
 
 
-std::map<std::string, int> Freq::calculate(std::list<std::string>& text) {
-	std::string word;
-	std::map<std::string, int> freq;
-	for (std::string& line : text) {
-		for (unsigned char ch : line) {
-			if (std::isalnum(ch)) {
-				word.push_back(std::tolower(ch));
-			}
-			else if (!word.empty()) {
-				freq[word] += 1;
-				word.clear();
-			}
-		}
-		if (!word.empty()) {
-			freq[word] += 1;
-			word.clear();
-		}
-	}
-	return freq;
+    //weof - wide end of file
+    for (wint_t ch = in.get(); ch != WEOF; ch = in.get()) {
+        if (std::iswalnum(ch)) {
+            word.push_back(static_cast<wchar_t>(std::towlower(ch)));
+        }
+        else if (!word.empty()) {
+                ++freq[word];
+                ++countWords;
+                word.clear();
+        }
+    }
+
+    if (!word.empty()) {
+        ++freq[word];
+        ++countWords;
+        word.clear();
+    }
+    return freq;
 }
-

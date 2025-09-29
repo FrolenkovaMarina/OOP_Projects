@@ -18,30 +18,24 @@
     <ClCompile Include="lab0_++.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="ArgCheck.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="Reader.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Writer.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="Freq.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Writer.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ArgCheck.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="Reader.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Writer.h">
+    <ClInclude Include="Freq.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Freq.h">
+    <ClInclude Include="Writer.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

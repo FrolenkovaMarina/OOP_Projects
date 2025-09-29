@@ -1,9 +1,10 @@
 #pragma once
 #include <map>
 #include <string>
-#include <list>
+#include <istream>
 
-class Freq {
+class FrequencyCalculator {
 public:
-	std::map<std::string, int> calculate(std::list<std::string>& text);
+    std::map<std::wstring, int> calculate_stream(std::wistream& in, int& countWords);
 };
+

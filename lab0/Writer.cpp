@@ -1,23 +1,29 @@
 #include "Writer.h"
 #include <iostream>
 #include <fstream>
+#include <locale>
+#include <codecvt>
+
+bool Writer::write(std::vector<std::pair<std::wstring, int>>& dict,
+    int& countWords, const std::string& output) {
+    std::wofstream out(output, std::ios::binary);
+    if (!out) {
+        std::cout << "ERROR: can't open output file\n";
+        return false;
+    }
+
+    out.imbue(std::locale(".UTF-8"));
 
 
-void Writer::writing(std::vector<std::pair<std::string, int>>& dict, int& countWords, bool& flag, const std::string& output) {
-	std::ofstream out(output);
-	if (!out) {//смогли ли открыть файл
-		flag = true;
-		std::cout << "ERROR: can't open output file\n";
-		return;
-	}
+    // Пишем BOM, чтобы Excel воспринял UTF-8
+    out << L"\uFEFF";
+    out << L"Word;Freq;Percent\n";
 
-	out << "Word;Freq;Percent\n";
+    for (auto& p : dict) {
+        double percent = (countWords == 0) ? 0.0
+            : 100.0 * static_cast<double>(p.second) / static_cast<double>(countWords);
+        out << p.first << L";" << p.second << L";'" << percent << L"'\n";
+    }
 
-	for (auto& i : dict) {
-		auto& word = i.first;
-		auto& countFreq = i.second;
-		double p = (countWords == 0) ? 0.0 : 100.0 * static_cast<double>(countFreq) / static_cast<double>(countWords);
-
-		out << word << ";" << countFreq << ";'" << p << "'\n";//одинарные ' т.к. Excel % на дату
-	}
+    return true;
 }

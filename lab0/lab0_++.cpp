@@ -1,55 +1,54 @@
 ﻿#include <iostream>
-#include <list>
 #include <string>
-#include <fstream>
-#include <map>
 #include <vector>
+#include <map>
 #include <algorithm>
+#include <fstream>
+#include <clocale>   // setlocale
 
-#include "ArgCheck.h"
 #include "Reader.h"
 #include "Freq.h"
 #include "Writer.h"
 
-bool compare(const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
-	if (a.second != b.second) {
-		return a.second > b.second;
-	}
-	return a.first < b.first;
+bool compare(const std::pair<std::wstring, int>&a, const std::pair<std::wstring, int>&b) {
+    if (a.second != b.second) return a.second > b.second;
+    return a.first < b.first;
 }
 
-
 int main(int argc, char** argv) {
-	ArgCheck checker(argc, argv);
-	if (!checker.getCorrect()) {
-		std::cout << "ERROR: wrong count of arguments\n";
-		return 1;
-	}
-	Reader reader;
-	Freq calcFreq;
-	bool flag = false;
-	std::list<std::string> text = reader.reading(checker.getInput(), flag);
-	if (flag) {
-		return 1;
-	}
-	std::map<std::string, int> freqResult = calcFreq.calculate(text);
-	std::vector<std::pair<std::string, int>> dict;
-	dict.reserve(freqResult.size());
+    if (argc != 3) {
+        std::cout << "ERROR: wrong count of arguments\n";
+        return 1;
+    }
 
-	int countWords = 0;
-	for (auto& i : freqResult) {
-		auto& word = i.first;
-		auto& countFreq = i.second;
+    std::string input = argv[1];
+    std::string output = argv[2];
 
-		dict.emplace_back(word, countFreq);//создаёт pair внутри vector
-		countWords += countFreq; //все слова(не разные только)
-	}
-	std::sort(dict.begin(), dict.end(), compare);
+    // Глобальная C-локаль, для iswalnum/towlower кириллицы. Второй аргумент пустой, берет настройки системы, а не конкретную локаль
+    std::setlocale(LC_ALL, "");
 
-	Writer writer;
-	writer.writing(dict, countWords, flag, checker.getOutput());
-	if (flag) {
-		return 1;
-	}
-	return 0;
+    Reader reader;
+    std::wifstream inp;
+    if (!reader.open(input, inp)) {
+        return 1;
+    }
+
+    FrequencyCalculator calcFreq;
+    int countWords = 0;
+    std::map<std::wstring, int> freqResult = calcFreq.calculate_stream(inp, countWords);
+
+    std::vector<std::pair<std::wstring, int>> dict;
+    dict.reserve(freqResult.size());
+    for (auto& it : freqResult) {
+        dict.emplace_back(it.first, it.second);
+    }
+
+    std::sort(dict.begin(), dict.end(), compare);
+
+    Writer writer;
+    if (writer.write(dict, countWords, output)) {
+        return 1;
+    }
+
+    return 0;
 }

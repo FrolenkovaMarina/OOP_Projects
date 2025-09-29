@@ -1,28 +1,22 @@
 #include "Reader.h"
 #include <iostream>
-#include <fstream>
+#include <locale>
+#include <codecvt>
 
+bool Reader::open(const std::string& input, std::wifstream& in) {
 
-std::list<std::string> Reader::reading(const std::string& input, bool& flag) {
-	std::ifstream inp(input);
-	std::list<std::string> text;
-	if (!inp) {//правильность ввода
-		flag = true;
-		std::cout << "ERROR: can't open input file\n";
-		return text;
-	}
-	std::string line;
-	int count = 0;
-	while (std::getline(inp, line)) {
-		count++;
-		text.push_back(line);
-	}
-	if (count == 0) {//является ли пустым файл
-		flag = true;
-		std::cout << "ERROR: input file empty\n";
-		return text;
-	}
-	return text;
+    in.open(input, std::ios::binary);
+    if (!in) {
+        std::cout << "ERROR: can't open input file\n";
+        return false;
+    }
 
+    in.imbue(std::locale(".UTF-8"));
+
+    auto ch = in.peek();
+    if (ch == WEOF) {
+        std::cout << "ERROR: input file empty\n";
+        return false;
+    }
+    return true;
 }
-

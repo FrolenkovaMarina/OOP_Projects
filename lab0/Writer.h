@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <utility>
 
 class Writer {
 public:
-	void writing(std::vector<std::pair<std::string, int>>& dict, 
-		int& countWords, bool& flag, const std::string& output);
+    bool write(std::vector<std::pair<std::wstring, int>>& dict,
+        int& countWords, const std::string& output);
 };
+

@@ -1,9 +1,9 @@
 #pragma once
-#include <list>
 #include <string>
-
+#include <fstream>
 
 class Reader {
 public:
-	std::list<std::string> reading(const std::string& input, bool& flag);
+    bool open(const std::string& input, std::wifstream& in);
 };
+
