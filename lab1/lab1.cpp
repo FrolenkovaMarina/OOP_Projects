@@ -2,14 +2,12 @@
 #include <map>
 
 
-//create node
 struct Node {
 	bool endOfWorld = false;
 	std::size_t subwords = 0;
 	std::map<unsigned char, Node*> children;
 };
 
-// рекурсивное удаление поддерева
 void deleteSubtree(Node* v) {
 	if (!v) return;
 	for (auto& kv : v->children) {
@@ -18,7 +16,6 @@ void deleteSubtree(Node* v) {
 	delete v;
 }
 
-// глубокое копирование поддерева
 Node* cloneNode(const Node* src) {
 	if (!src) return nullptr;
 	Node* dst = new Node();
@@ -30,11 +27,10 @@ Node* cloneNode(const Node* src) {
 	return dst;
 }
 
-// DFS: собираем слова из поддерева (лексикографически по возрастанию байтов-ключей)
 void collectWords(const Node* v,
 	std::string& cur,
 	std::vector<std::string>& out,
-	std::size_t limit /*0 = без лимита*/) {
+	std::size_t limit) {
 	if (!v) return;
 	if (v->endOfWorld) {
 		out.push_back(cur);
@@ -48,43 +44,38 @@ void collectWords(const Node* v,
 	}
 }
 
-// попытка удалить «висячего» ребёнка по байту b
 bool tryPruneChild(Node* parent, unsigned char b) {
-    auto it = parent->children.find(b);
-    if (it == parent->children.end()) return false;
-    Node* c = it->second;
-    if (c->subwords != 0) return false;          // в поддереве ещё есть слова
-    if (!c->children.empty()) return false;      // есть потомки — не висячий
-    delete c;
-    parent->children.erase(it);
-    return true;
+	auto it = parent->children.find(b);
+	if (it == parent->children.end()) return false;
+	Node* c = it->second;
+	if (c->subwords != 0) return false;
+	if (!c->children.empty()) return false;
+	delete c;
+	parent->children.erase(it);
+	return true;
 }
 
 
-// ===== Реализация Trie =====
+Trie::Trie() : root_(new Node), wordCount_(0) {}
 
-Trie::Trie() : root_(new Node), wordCount_(0) {} // Конструктор по умолчанию
-
-Trie::~Trie() { // Деструктор
+Trie::~Trie() {
 	clear();
 	delete root_;
 	root_ = nullptr;
 }
 
-Trie::Trie(const Trie& other) :  // Конструктор копирования
-	root_(cloneNode(other.root_)), wordCount_(other.wordCount_) {}
-//Полностью копирует всё дерево: создаёт новый Node
-// копирует все флаги(endOfWorld, subwords), 
-// рекурсивно клонирует всех детей и возвращает новый корень
+Trie::Trie(const Trie& other) :
+	root_(cloneNode(other.root_)), wordCount_(other.wordCount_) {
+}
 
 
-Trie::Trie(Trie&& other) noexcept  // Конструктор перемещения
-	: root_(other.root_), wordCount_(other.wordCount_) { //просто копируем указатель
-	other.root_ = new Node; // старый объект получает пустой корень
+Trie::Trie(Trie&& other) noexcept
+	: root_(other.root_), wordCount_(other.wordCount_) {
+	other.root_ = new Node;
 	other.wordCount_ = 0;
 }
 
-Trie& Trie::operator=(const Trie& other) { // Оператор присваивания копированием
+Trie& Trie::operator=(const Trie& other) {
 	if (this == &other) return *this;
 	Node* newRoot = cloneNode(other.root_);
 	clear();
@@ -94,8 +85,8 @@ Trie& Trie::operator=(const Trie& other) { // Оператор присваив�
 	return *this;
 }
 
-Trie& Trie::operator=(Trie&& other) noexcept { // Оператор присваивания перемещением
-	if (this == &other) return* this;
+Trie& Trie::operator=(Trie&& other) noexcept {
+	if (this == &other) return*this;
 	clear();
 	delete root_;
 	root_ = other.root_;
@@ -106,7 +97,6 @@ Trie& Trie::operator=(Trie&& other) noexcept { // Оператор присва�
 }
 
 void Trie::clear() {
-	// удалить всё поддерево корня, но корень оставить «пустым»
 	for (auto& kv : root_->children) {
 		deleteSubtree(kv.second);
 	}
@@ -116,27 +106,23 @@ void Trie::clear() {
 	wordCount_ = 0;
 }
 
-bool Trie::empty() const { return wordCount_ == 0; } // true, если нет слов
+bool Trie::empty() const { return wordCount_ == 0; }
 
-Trie::size_type Trie::size() const { return wordCount_; } // Количество сохранённых слов
+Trie::size_type Trie::size() const { return wordCount_; }
 
-// Вставка строки
 void Trie::insert(std::string_view s) {
 	Node* v = root_;
 	std::vector<Node*> path;
 	path.reserve(s.size() + 1);
 	path.push_back(v);
 
-	bool createdNewNode = false;
 
-	// Спускаемся по дереву, создавая недостающие узлы
 	for (unsigned char b : s) {
 		auto it = v->children.find(b);
 		if (it == v->children.end()) {
 			Node* nw = new Node();
 			v->children.emplace(b, nw);
 			v = nw;
-			createdNewNode = true;         // это важно!
 		}
 		else {
 			v = it->second;
@@ -144,22 +130,18 @@ void Trie::insert(std::string_view s) {
 		path.push_back(v);
 	}
 
-	// Если слово уже было — ничего не делаем
 	if (v->endOfWorld) {
 		return;
 	}
 
-	// Помечаем терминал
 	v->endOfWorld = true;
 
-	// Увеличиваем subwords по всему пути
 	for (Node* u : path) {
 		u->subwords += 1;
 	}
 	++wordCount_;
 }
 
-// Проверка наличия строки
 bool Trie::contains(std::string_view s) const {
 	const Node* v = root_;
 	for (unsigned char b : s) {
@@ -170,29 +152,24 @@ bool Trie::contains(std::string_view s) const {
 	return v->endOfWorld;
 }
 
-// Удаление строки
 bool Trie::erase(std::string_view s) {
 	if (!contains(s)) return false;
 
-	// сохраним путь от корня для обратного прохода (схлопывание)
 	std::vector<Node*> path;
 	path.reserve(s.size() + 1);
 	Node* v = root_;
 	path.push_back(v);
 	for (unsigned char b : s) {
-		v = v->children[b];        // существует
+		v = v->children[b];
 		path.push_back(v);
 	}
 
-	// снять терминальность
 	v->endOfWorld = false;
 
-	// уменьшить subwords вдоль пути
 	for (Node* u : path) {
 		u->subwords -= 1;
 	}
 
-	// снизу вверх пробуем удалить «висячие» узлы
 	for (std::size_t i = s.size(); i > 0; --i) {
 		Node* parent = path[i - 1];
 		unsigned char b = static_cast<unsigned char>(s[i - 1]);
@@ -203,7 +180,6 @@ bool Trie::erase(std::string_view s) {
 	return true;
 }
 
-// Количество слов с данным префиксом
 Trie::size_type Trie::prefix_count(std::string_view pref) const {
 	const Node* v = root_;
 	for (unsigned char b : pref) {
@@ -214,7 +190,6 @@ Trie::size_type Trie::prefix_count(std::string_view pref) const {
 	return v->subwords;
 }
 
-// Все слова с данным префиксом
 std::vector<std::string> Trie::words_with_prefix(std::string_view pref, size_type limit) const {
 	const Node* v = root_;
 	for (unsigned char b : pref) {
@@ -224,12 +199,11 @@ std::vector<std::string> Trie::words_with_prefix(std::string_view pref, size_typ
 	}
 	std::vector<std::string> out;
 	out.reserve(limit ? limit : 8);
-	std::string cur(pref); // начнём с самого префикса
+	std::string cur(pref);
 	collectWords(v, cur, out, limit);
 	return out;
 }
 
-// Равенство по множеству строк
 bool Trie::operator==(const Trie& other) const {
 	if (size() != other.size()) return false;
 	auto a = words_with_prefix("");
@@ -241,7 +215,6 @@ bool Trie::operator!=(const Trie& other) const {
 	return !(*this == other);
 }
 
-// Красивый вывод всех слов в алфавитном порядке
 std::ostream& operator<<(std::ostream& os, const Trie& trie) {
 	auto all = trie.words_with_prefix("");
 	for (std::size_t i = 0; i < all.size(); ++i) {
