@@ -3,7 +3,7 @@
 
 
 struct Node {
-	bool endOfWorld = false;
+	bool EOW = false;
 	std::size_t subwords = 0;
 	std::map<unsigned char, Node*> children;
 };
@@ -18,12 +18,15 @@ void deleteSubtree(Node* v) {
 
 Node* cloneNode(const Node* src) {
 	if (!src) return nullptr;
+
 	Node* dst = new Node();
-	dst->endOfWorld = src->endOfWorld;
+	dst->EOW = src->EOW;
 	dst->subwords = src->subwords;
+	
 	for (const auto& [b, child] : src->children) {
 		dst->children[b] = cloneNode(child);
 	}
+	
 	return dst;
 }
 
@@ -32,10 +35,11 @@ void collectWords(const Node* v,
 	std::vector<std::string>& out,
 	std::size_t limit) {
 	if (!v) return;
-	if (v->endOfWorld) {
+	if (v->EOW) {
 		out.push_back(cur);
 		if (limit && out.size() >= limit) return;
 	}
+	
 	for (const auto& [b, child] : v->children) {
 		cur.push_back(static_cast<char>(b));
 		collectWords(child, cur, out, limit);
@@ -47,10 +51,12 @@ void collectWords(const Node* v,
 bool tryPruneChild(Node* parent, unsigned char b) {
 	auto it = parent->children.find(b);
 	if (it == parent->children.end()) return false;
+	
 	Node* c = it->second;
 	if (c->subwords != 0) return false;
 	if (!c->children.empty()) return false;
 	delete c;
+	
 	parent->children.erase(it);
 	return true;
 }
@@ -101,7 +107,7 @@ void Trie::clear() {
 		deleteSubtree(kv.second);
 	}
 	root_->children.clear();
-	root_->endOfWorld = false;
+	root_->EOW = false;
 	root_->subwords = 0;
 	wordCount_ = 0;
 }
@@ -130,11 +136,11 @@ void Trie::insert(std::string_view s) {
 		path.push_back(v);
 	}
 
-	if (v->endOfWorld) {
+	if (v->EOW) {
 		return;
 	}
 
-	v->endOfWorld = true;
+	v->EOW = true;
 
 	for (Node* u : path) {
 		u->subwords += 1;
@@ -149,7 +155,7 @@ bool Trie::contains(std::string_view s) const {
 		if (it == v->children.end()) return false;
 		v = it->second;
 	}
-	return v->endOfWorld;
+	return v->EOW;
 }
 
 bool Trie::erase(std::string_view s) {
@@ -164,7 +170,7 @@ bool Trie::erase(std::string_view s) {
 		path.push_back(v);
 	}
 
-	v->endOfWorld = false;
+	v->EOW = false;
 
 	for (Node* u : path) {
 		u->subwords -= 1;
@@ -198,7 +204,10 @@ std::vector<std::string> Trie::words_with_prefix(std::string_view pref, size_typ
 		v = it->second;
 	}
 	std::vector<std::string> out;
-	out.reserve(limit ? limit : 8);
+	
+	
+	
+	out.reserve(limit ? limit : DEFAULT_LIMIT);
 	std::string cur(pref);
 	collectWords(v, cur, out, limit);
 	return out;
