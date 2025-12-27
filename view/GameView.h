@@ -17,43 +17,43 @@ class GameView {
 public:
     GameView(GameModel& model, sf::RenderWindow& window);
 
-    // рисование всего кадра
+    // СЂРёСЃРѕРІР°РЅРёРµ РІСЃРµРіРѕ РєР°РґСЂР°
     void draw();
 
-    // для анимации воды
+    // РґР»СЏ Р°РЅРёРјР°С†РёРё РІРѕРґС‹
     sf::Clock anim_clock_;
 
 private:
-    // ссылки на model и окно sfml
+    // СЃСЃС‹Р»РєРё РЅР° model Рё РѕРєРЅРѕ sfml
     GameModel& model_;
     sf::RenderWindow& window_;
 
-    // шрифт и текст для game over
+    // С€СЂРёС„С‚ Рё С‚РµРєСЃС‚ РґР»СЏ game over
     sf::Font font_;
     sf::Text game_over_text_;
 
-    // текстуры машин
+    // С‚РµРєСЃС‚СѓСЂС‹ РјР°С€РёРЅ
     std::array<sf::Texture, 5> small_car_textures_;
     std::array<sf::Texture, 3> big_car_textures_;
     bool car_textures_loaded_ = false;
 
-    // текстуры бревен
+    // С‚РµРєСЃС‚СѓСЂС‹ Р±СЂРµРІРµРЅ
     sf::Texture                log2_texture_;
     std::array<sf::Texture, 2> log3_textures_;
     bool log_textures_loaded_ = false;
 
-    // текстура блика на воде
+    // С‚РµРєСЃС‚СѓСЂР° Р±Р»РёРєР° РЅР° РІРѕРґРµ
     sf::Texture water_highlight_texture_;
     bool water_highlight_loaded_ = false;
 
-    // загрузка текстур машин
+    // Р·Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂ РјР°С€РёРЅ
     void loadCarTextures();
 
     void loadLogTextures();
 
     void loadHighlightTex();
 
-    // текстуры природы для травы
+    // С‚РµРєСЃС‚СѓСЂС‹ РїСЂРёСЂРѕРґС‹ РґР»СЏ С‚СЂР°РІС‹
     std::array<sf::Texture, 2> tree_textures_;
     sf::Texture bush_texture_;
     std::array<sf::Texture, 2> rock_textures_;
@@ -61,12 +61,12 @@ private:
 
     void loadNatureTextures();
 
-    // текстуры игрока
+    // С‚РµРєСЃС‚СѓСЂС‹ РёРіСЂРѕРєР°
     sf::Texture player_texture_;
     sf::Texture player_shadow_texture_;
     bool player_textures_loaded_ = false;
 
-    // звуки
+    // Р·РІСѓРєРё
     sf::Music jump_music_;
     sf::Music cars_loop_music_;
     bool sounds_loaded_ = false;
@@ -74,20 +74,20 @@ private:
 
     void loadSounds();
 
-    // текстуры смерти
+    // С‚РµРєСЃС‚СѓСЂС‹ СЃРјРµСЂС‚Рё
     sf::Texture death_drown_texture_;
     sf::Texture death_hit_front_texture_;
     sf::Texture death_hit_side_texture_;
     bool death_textures_loaded_ = false;
 
-    // загрузка текстур смерти
+    // Р·Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂ СЃРјРµСЂС‚Рё
     void loadDeathTextures();
 
-    // старые координаты игрока, если надо отследить перемещение
+    // СЃС‚Р°СЂС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ РёРіСЂРѕРєР°, РµСЃР»Рё РЅР°РґРѕ РѕС‚СЃР»РµРґРёС‚СЊ РїРµСЂРµРјРµС‰РµРЅРёРµ
     int prev_player_row_ = -9999;
     int prev_player_col_ = -9999;
 
-    // анимация прыжка
+    // Р°РЅРёРјР°С†РёСЏ РїСЂС‹Р¶РєР°
     bool  jump_active_ = false;
     float jump_t_ = 0.f;
     float jump_duration_ = 0.14f;

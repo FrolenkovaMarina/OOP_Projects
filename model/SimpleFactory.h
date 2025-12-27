@@ -5,7 +5,7 @@
 #include <vector>
 
 
-// хранит соответствие id и функций создания объектов
+// С…СЂР°РЅРёС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ id Рё С„СѓРЅРєС†РёР№ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚РѕРІ
 template<class AbstractProduct, class IdentifierType, class ProductCreator>
 class SimpleFactory {
 public:
@@ -16,7 +16,7 @@ public:
         return true;
     }
 
-    // создание объекта по id
+    // СЃРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р° РїРѕ id
     ProductPtr create(const IdentifierType& id, int index, const std::vector<int>* open_cols) const {
         auto it = creators_.find(id);
         if (it == creators_.end())
@@ -26,6 +26,6 @@ public:
     }
 
 private:
-    // таблица соответствия id и функций создания
+    // С‚Р°Р±Р»РёС†Р° СЃРѕРѕС‚РІРµС‚СЃС‚РІРёСЏ id Рё С„СѓРЅРєС†РёР№ СЃРѕР·РґР°РЅРёСЏ
     std::map<IdentifierType, ProductCreator> creators_;
 };

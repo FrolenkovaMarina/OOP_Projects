@@ -3,7 +3,7 @@
 #include <ctime>
 
 
-// чтобы srand вызывался один раз и рандом не сбивался каждый раз
+// С‡С‚РѕР±С‹ srand РІС‹Р·С‹РІР°Р»СЃСЏ РѕРґРёРЅ СЂР°Р· Рё СЂР°РЅРґРѕРј РЅРµ СЃР±РёРІР°Р»СЃСЏ РєР°Р¶РґС‹Р№ СЂР°Р·
 static void ensureRiverSeed()
 {
     static bool seeded = false;
@@ -20,26 +20,26 @@ RiverLane::RiverLane(int index)
 {
     ensureRiverSeed();
 
-    // направление разное через одну полосу
+    // РЅР°РїСЂР°РІР»РµРЅРёРµ СЂР°Р·РЅРѕРµ С‡РµСЂРµР· РѕРґРЅСѓ РїРѕР»РѕСЃСѓ
     direction_ = (lane_index_ % 2 == 0) ? 1 : -1;
 
-    // скорость случайно
+    // СЃРєРѕСЂРѕСЃС‚СЊ СЃР»СѓС‡Р°Р№РЅРѕ
     float t = static_cast<float>(std::rand()) / RAND_MAX;
     base_speed_ = 0.8f + 1.2f * t;
 
-    // создаем бревна
+    // СЃРѕР·РґР°РµРј Р±СЂРµРІРЅР°
     initLogs();
 }
 
 
 void RiverLane::initLogs()
 {
-    // заново наполняем полосу бревнами
+    // Р·Р°РЅРѕРІРѕ РЅР°РїРѕР»РЅСЏРµРј РїРѕР»РѕСЃСѓ Р±СЂРµРІРЅР°РјРё
     logs_.clear();
 
     const int width = Config::GRID_WIDTH;
 
-    // идем слева направо и пытаемся ставить бревна с зазорами
+    // РёРґРµРј СЃР»РµРІР° РЅР°РїСЂР°РІРѕ Рё РїС‹С‚Р°РµРјСЃСЏ СЃС‚Р°РІРёС‚СЊ Р±СЂРµРІРЅР° СЃ Р·Р°Р·РѕСЂР°РјРё
     int cur_col = 0;
     bool first = true;
     int last_end = -100;
@@ -84,7 +84,7 @@ void RiverLane::update(float dt)
 {
     const int width = Config::GRID_WIDTH;
 
-    // обновляем каждое бревно и делаем респавн когда оно уехало за экран
+    // РѕР±РЅРѕРІР»СЏРµРј РєР°Р¶РґРѕРµ Р±СЂРµРІРЅРѕ Рё РґРµР»Р°РµРј СЂРµСЃРїР°РІРЅ РєРѕРіРґР° РѕРЅРѕ СѓРµС…Р°Р»Рѕ Р·Р° СЌРєСЂР°РЅ
     for (auto& logPtr : logs_)
     {
         Log& log = *logPtr;
@@ -97,7 +97,7 @@ void RiverLane::update(float dt)
         {
             if (x - len > width + 2)
             {
-                // ищем самое левое бревно, чтобы поставить это еще левее с зазором
+                // РёС‰РµРј СЃР°РјРѕРµ Р»РµРІРѕРµ Р±СЂРµРІРЅРѕ, С‡С‚РѕР±С‹ РїРѕСЃС‚Р°РІРёС‚СЊ СЌС‚Рѕ РµС‰Рµ Р»РµРІРµРµ СЃ Р·Р°Р·РѕСЂРѕРј
                 float min_x = 1e9f;
                 bool found = false;
 
@@ -113,13 +113,13 @@ void RiverLane::update(float dt)
                 int extra = std::rand() % 2;
                 int gap = base + extra;
 
-                // если нашли другое бревно, ставим левее него
-                // если нет, ставим просто за экран
+                // РµСЃР»Рё РЅР°С€Р»Рё РґСЂСѓРіРѕРµ Р±СЂРµРІРЅРѕ, СЃС‚Р°РІРёРј Р»РµРІРµРµ РЅРµРіРѕ
+                // РµСЃР»Рё РЅРµС‚, СЃС‚Р°РІРёРј РїСЂРѕСЃС‚Рѕ Р·Р° СЌРєСЂР°РЅ
                 float new_x = found
                     ? (min_x - static_cast<float>(gap) - static_cast<float>(len))
                     : (-static_cast<float>(len) - 2.f);
 
-                // гарантируем что новое положение точно вне экрана
+                // РіР°СЂР°РЅС‚РёСЂСѓРµРј С‡С‚Рѕ РЅРѕРІРѕРµ РїРѕР»РѕР¶РµРЅРёРµ С‚РѕС‡РЅРѕ РІРЅРµ СЌРєСЂР°РЅР°
                 float offscreen_x = -static_cast<float>(len) - 2.f;
                 if (new_x > offscreen_x)
                     new_x = offscreen_x;
@@ -129,7 +129,7 @@ void RiverLane::update(float dt)
         }
         else
         {
-            // движение влево
+            // РґРІРёР¶РµРЅРёРµ РІР»РµРІРѕ
             if (x + len < -2)
             {
                 float max_x = -1e9f;
@@ -151,7 +151,7 @@ void RiverLane::update(float dt)
                     ? (max_x + static_cast<float>(gap) + static_cast<float>(len))
                     : (static_cast<float>(width) + 2.f);
 
-                // гарантируем что новое положение точно вне экрана
+                // РіР°СЂР°РЅС‚РёСЂСѓРµРј С‡С‚Рѕ РЅРѕРІРѕРµ РїРѕР»РѕР¶РµРЅРёРµ С‚РѕС‡РЅРѕ РІРЅРµ СЌРєСЂР°РЅР°
                 float offscreen_x = static_cast<float>(width) + 2.f;
                 if (new_x < offscreen_x)
                     new_x = offscreen_x;

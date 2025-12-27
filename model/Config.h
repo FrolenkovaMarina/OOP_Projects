@@ -1,10 +1,10 @@
 #pragma once
 
 namespace Config {
-    constexpr int TILE_SIZE = 48; // размер одной клетки в пикселях
+    constexpr int TILE_SIZE = 48; // СЂР°Р·РјРµСЂ РѕРґРЅРѕР№ РєР»РµС‚РєРё РІ РїРёРєСЃРµР»СЏС…
 
-    constexpr int GRID_WIDTH = 11;   // телефонная ширина
-    constexpr int GRID_HEIGHT = 16;  // телефонная высота
+    constexpr int GRID_WIDTH = 11;   // С‚РµР»РµС„РѕРЅРЅР°СЏ С€РёСЂРёРЅР°
+    constexpr int GRID_HEIGHT = 16;  // С‚РµР»РµС„РѕРЅРЅР°СЏ РІС‹СЃРѕС‚Р°
 
-    constexpr float WORLD_SCROLL_SPEED = 0.2f;  // скорость прокрутки мира вверх
+    constexpr float WORLD_SCROLL_SPEED = 0.2f;  // СЃРєРѕСЂРѕСЃС‚СЊ РїСЂРѕРєСЂСѓС‚РєРё РјРёСЂР° РІРІРµСЂС…
 }

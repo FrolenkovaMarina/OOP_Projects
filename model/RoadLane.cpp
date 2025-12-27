@@ -3,7 +3,7 @@
 #include <ctime>
 
 
-// чтобы srand вызывался один раз
+// С‡С‚РѕР±С‹ srand РІС‹Р·С‹РІР°Р»СЃСЏ РѕРґРёРЅ СЂР°Р·
 static void ensureRandomSeed()
 {
     static bool seeded = false;
@@ -25,19 +25,19 @@ RoadLane::RoadLane(int index)
     float t = static_cast<float>(std::rand()) / RAND_MAX;
     base_speed_ = 1.2f + 1.5f * t;
 
-    // создаем стартовые машины
+    // СЃРѕР·РґР°РµРј СЃС‚Р°СЂС‚РѕРІС‹Рµ РјР°С€РёРЅС‹
     initCars();
 }
 
 
 void RoadLane::initCars()
 {
-    // заново заполняем список машин
+    // Р·Р°РЅРѕРІРѕ Р·Р°РїРѕР»РЅСЏРµРј СЃРїРёСЃРѕРє РјР°С€РёРЅ
     cars_.clear();
 
     const int width = Config::GRID_WIDTH;
 
-    // идем слева направо и расставляем машины с зазорами
+    // РёРґРµРј СЃР»РµРІР° РЅР°РїСЂР°РІРѕ Рё СЂР°СЃСЃС‚Р°РІР»СЏРµРј РјР°С€РёРЅС‹ СЃ Р·Р°Р·РѕСЂР°РјРё
     int cur_col = 0;
     bool first = true;
     int last_end = -100;
@@ -79,7 +79,7 @@ void RoadLane::initCars()
         last_end = cur_col + length_cells;
         first = false;
 
-        // зазор после машины чтобы они не слипались
+        // Р·Р°Р·РѕСЂ РїРѕСЃР»Рµ РјР°С€РёРЅС‹ С‡С‚РѕР±С‹ РѕРЅРё РЅРµ СЃР»РёРїР°Р»РёСЃСЊ
         int base_gap_after = (length_cells == 3) ? 3 : 2;
         int extra_gap = std::rand() % 2;
 
@@ -94,11 +94,11 @@ void RoadLane::update(float dt)
 {
     const int width = Config::GRID_WIDTH;
 
-    // сначала обновляем позиции всех машин
+    // СЃРЅР°С‡Р°Р»Р° РѕР±РЅРѕРІР»СЏРµРј РїРѕР·РёС†РёРё РІСЃРµС… РјР°С€РёРЅ
     for (auto& carPtr : cars_)
         carPtr->update(dt);
 
-    // потом проверяем кто уехал за экран и делаем респавн
+    // РїРѕС‚РѕРј РїСЂРѕРІРµСЂСЏРµРј РєС‚Рѕ СѓРµС…Р°Р» Р·Р° СЌРєСЂР°РЅ Рё РґРµР»Р°РµРј СЂРµСЃРїР°РІРЅ
     for (auto& carPtr : cars_)
     {
         Car& car = *carPtr;

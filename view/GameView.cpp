@@ -8,30 +8,30 @@
 #include <iostream>
 
 
-// view отвечает только за отрисовку и загрузку текстур/звуков
-// вся логика игры находится в model
+// view РѕС‚РІРµС‡Р°РµС‚ С‚РѕР»СЊРєРѕ Р·Р° РѕС‚СЂРёСЃРѕРІРєСѓ Рё Р·Р°РіСЂСѓР·РєСѓ С‚РµРєСЃС‚СѓСЂ/Р·РІСѓРєРѕРІ
+// РІСЃСЏ Р»РѕРіРёРєР° РёРіСЂС‹ РЅР°С…РѕРґРёС‚СЃСЏ РІ model
 GameView::GameView(GameModel& model, sf::RenderWindow& window)
     : model_(model)
     , window_(window)
 {
-    // грузим шрифт для надписи game over
+    // РіСЂСѓР·РёРј С€СЂРёС„С‚ РґР»СЏ РЅР°РґРїРёСЃРё game over
     if (!font_.loadFromFile("res/Roboto.ttf")) {
         std::cout << "the file did not load :(\n";
     }
 
-    // настраиваем текст game over один раз, чтобы каждый кадр не пересоздавать
+    // РЅР°СЃС‚СЂР°РёРІР°РµРј С‚РµРєСЃС‚ game over РѕРґРёРЅ СЂР°Р·, С‡С‚РѕР±С‹ РєР°Р¶РґС‹Р№ РєР°РґСЂ РЅРµ РїРµСЂРµСЃРѕР·РґР°РІР°С‚СЊ
     game_over_text_.setFont(font_);
     game_over_text_.setString("Game Over");
     game_over_text_.setCharacterSize(64);
     game_over_text_.setFillColor(sf::Color::White);
 
-    // ставим текст по центру экрана
+    // СЃС‚Р°РІРёРј С‚РµРєСЃС‚ РїРѕ С†РµРЅС‚СЂСѓ СЌРєСЂР°РЅР°
     sf::FloatRect bounds = game_over_text_.getLocalBounds();
     float x = (window_.getSize().x - bounds.width) / 2.f - bounds.left;
     float y = (window_.getSize().y - bounds.height) / 2.f - bounds.top;
     game_over_text_.setPosition(x, y);
 
-    // загрузка ресурсов
+    // Р·Р°РіСЂСѓР·РєР° СЂРµСЃСѓСЂСЃРѕРІ
     loadCarTextures();
     loadLogTextures();
     loadHighlightTex();
@@ -42,7 +42,7 @@ GameView::GameView(GameModel& model, sf::RenderWindow& window)
 }
 
 
-// простая функция чтобы ограничить значение от 0 до 1
+// РїСЂРѕСЃС‚Р°СЏ С„СѓРЅРєС†РёСЏ С‡С‚РѕР±С‹ РѕРіСЂР°РЅРёС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РѕС‚ 0 РґРѕ 1
 static float clamp01(float x)
 {
     if (x < 0.f) return 0.f;
@@ -51,8 +51,8 @@ static float clamp01(float x)
 }
 
 
-// масштаб игрока во время прыжка
-// чтобы прыжок выглядел как небольшое подпрыгивание
+// РјР°СЃС€С‚Р°Р± РёРіСЂРѕРєР° РІРѕ РІСЂРµРјСЏ РїСЂС‹Р¶РєР°
+// С‡С‚РѕР±С‹ РїСЂС‹Р¶РѕРє РІС‹РіР»СЏРґРµР» РєР°Рє РЅРµР±РѕР»СЊС€РѕРµ РїРѕРґРїСЂС‹РіРёРІР°РЅРёРµ
 static float jump_scale(float t)
 {
     t = clamp01(t);
@@ -60,8 +60,8 @@ static float jump_scale(float t)
 }
 
 
-// прозрачность тени во время прыжка
-// когда игрок в воздухе тень чуть слабее
+// РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚СЊ С‚РµРЅРё РІРѕ РІСЂРµРјСЏ РїСЂС‹Р¶РєР°
+// РєРѕРіРґР° РёРіСЂРѕРє РІ РІРѕР·РґСѓС…Рµ С‚РµРЅСЊ С‡СѓС‚СЊ СЃР»Р°Р±РµРµ
 static sf::Uint8 shadow_alpha(float t)
 {
     t = clamp01(t);
@@ -72,8 +72,8 @@ static sf::Uint8 shadow_alpha(float t)
 }
 
 
-// масштаб тени во время прыжка
-// тень становится меньше когда игрок выше
+// РјР°СЃС€С‚Р°Р± С‚РµРЅРё РІРѕ РІСЂРµРјСЏ РїСЂС‹Р¶РєР°
+// С‚РµРЅСЊ СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РјРµРЅСЊС€Рµ РєРѕРіРґР° РёРіСЂРѕРє РІС‹С€Рµ
 static float shadow_scale_mul(float t)
 {
     t = clamp01(t);
@@ -81,14 +81,14 @@ static float shadow_scale_mul(float t)
 }
 
 
-// основной рендер кадра
+// РѕСЃРЅРѕРІРЅРѕР№ СЂРµРЅРґРµСЂ РєР°РґСЂР°
 void GameView::draw()
 {
-    // чистим экран
+    // С‡РёСЃС‚РёРј СЌРєСЂР°РЅ
     window_.clear(sf::Color::Black);
 
-    // включаем или выключаем звук машин
-    // он должен играть только когда реально есть дорожные полосы на экране
+    // РІРєР»СЋС‡Р°РµРј РёР»Рё РІС‹РєР»СЋС‡Р°РµРј Р·РІСѓРє РјР°С€РёРЅ
+    // РѕРЅ РґРѕР»Р¶РµРЅ РёРіСЂР°С‚СЊ С‚РѕР»СЊРєРѕ РєРѕРіРґР° СЂРµР°Р»СЊРЅРѕ РµСЃС‚СЊ РґРѕСЂРѕР¶РЅС‹Рµ РїРѕР»РѕСЃС‹ РЅР° СЌРєСЂР°РЅРµ
     if (sounds_loaded_)
     {
         bool any_road_on_screen = false;
@@ -125,11 +125,11 @@ void GameView::draw()
         }
     }
 
-    // время кадра для анимации прыжка
+    // РІСЂРµРјСЏ РєР°РґСЂР° РґР»СЏ Р°РЅРёРјР°С†РёРё РїСЂС‹Р¶РєР°
     float adt = jump_clock_.restart().asSeconds();
 
-    // jump serial меняется когда модель сообщает что был прыжок
-    // так view понимает что надо запустить анимацию
+    // jump serial РјРµРЅСЏРµС‚СЃСЏ РєРѕРіРґР° РјРѕРґРµР»СЊ СЃРѕРѕР±С‰Р°РµС‚ С‡С‚Рѕ Р±С‹Р» РїСЂС‹Р¶РѕРє
+    // С‚Р°Рє view РїРѕРЅРёРјР°РµС‚ С‡С‚Рѕ РЅР°РґРѕ Р·Р°РїСѓСЃС‚РёС‚СЊ Р°РЅРёРјР°С†РёСЋ
     int js = model_.getJumpSerial();
     if (js != prev_jump_serial_)
     {
@@ -137,7 +137,7 @@ void GameView::draw()
         jump_active_ = true;
         jump_t_ = 0.f;
 
-        // звук прыжка
+        // Р·РІСѓРє РїСЂС‹Р¶РєР°
         if (sounds_loaded_)
         {
             jump_music_.stop();
@@ -146,7 +146,7 @@ void GameView::draw()
         }
     }
 
-    // обновляем прогресс прыжка 0..1
+    // РѕР±РЅРѕРІР»СЏРµРј РїСЂРѕРіСЂРµСЃСЃ РїСЂС‹Р¶РєР° 0..1
     if (jump_active_)
     {
         jump_t_ += adt / jump_duration_;
@@ -161,10 +161,10 @@ void GameView::draw()
     float cell_offset = model_.getWorldOffset();
     float tile = static_cast<float>(Config::TILE_SIZE);
 
-    // сначала рисуем все полосы фона
+    // СЃРЅР°С‡Р°Р»Р° СЂРёСЃСѓРµРј РІСЃРµ РїРѕР»РѕСЃС‹ С„РѕРЅР°
     for (std::size_t i = 0; i < lanes.size(); ++i)
     {
-        // y считается с учетом world offset чтобы был эффект движения мира
+        // y СЃС‡РёС‚Р°РµС‚СЃСЏ СЃ СѓС‡РµС‚РѕРј world offset С‡С‚РѕР±С‹ Р±С‹Р» СЌС„С„РµРєС‚ РґРІРёР¶РµРЅРёСЏ РјРёСЂР°
         float y = (static_cast<float>(i) - 1.f + cell_offset) * tile;
 
         sf::RectangleShape rect;
@@ -176,11 +176,11 @@ void GameView::draw()
 
         if (roadLane)
         {
-            // дорога
+            // РґРѕСЂРѕРіР°
             rect.setFillColor(sf::Color(60, 60, 60));
             window_.draw(rect);
 
-            // полоски на дороге
+            // РїРѕР»РѕСЃРєРё РЅР° РґРѕСЂРѕРіРµ
             float stripe_h = tile / 15.f;
             float stripe_w = tile / 2.f;
             float gap = tile / 1.5f;
@@ -197,7 +197,7 @@ void GameView::draw()
         }
         else if (riverLane)
         {
-            // вода
+            // РІРѕРґР°
             float tile_size = tile;
             float lane_width = Config::GRID_WIDTH * tile_size;
 
@@ -207,7 +207,7 @@ void GameView::draw()
             base_water.setFillColor(sf::Color(70, 160, 240));
             window_.draw(base_water);
 
-            // затемнение по краям чтобы вода выглядела объемнее
+            // Р·Р°С‚РµРјРЅРµРЅРёРµ РїРѕ РєСЂР°СЏРј С‡С‚РѕР±С‹ РІРѕРґР° РІС‹РіР»СЏРґРµР»Р° РѕР±СЉРµРјРЅРµРµ
             float border = 2.5f * tile_size;
             float border_right = lane_width - border;
 
@@ -223,7 +223,7 @@ void GameView::draw()
             dark_right.setFillColor(sf::Color(50, 140, 220));
             window_.draw(dark_right);
 
-            // блики на воде если текстура загружена
+            // Р±Р»РёРєРё РЅР° РІРѕРґРµ РµСЃР»Рё С‚РµРєСЃС‚СѓСЂР° Р·Р°РіСЂСѓР¶РµРЅР°
             if (water_highlight_loaded_)
             {
                 sf::Sprite L, R;
@@ -244,7 +244,7 @@ void GameView::draw()
 
                 float y_pos = y + (tile_size - scaled_h) / 2.f;
 
-                // простая анимация бликов синусом
+                // РїСЂРѕСЃС‚Р°СЏ Р°РЅРёРјР°С†РёСЏ Р±Р»РёРєРѕРІ СЃРёРЅСѓСЃРѕРј
                 float t = anim_clock_.getElapsedTime().asSeconds();
 
                 float wobble_amp = tile_size * 0.04f;
@@ -256,7 +256,7 @@ void GameView::draw()
                 L.setScale(scale, scale);
                 L.setPosition(center_left - scaled_w * 0.5f, y_pos);
 
-                // правый блик зеркалим по x через отрицательный scale
+                // РїСЂР°РІС‹Р№ Р±Р»РёРє Р·РµСЂРєР°Р»РёРј РїРѕ x С‡РµСЂРµР· РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Р№ scale
                 R.setTexture(water_highlight_texture_);
                 R.setScale(-scale, scale);
                 R.setOrigin(tex_w, 0.f);
@@ -270,7 +270,7 @@ void GameView::draw()
         }
         else
         {
-            // трава
+            // С‚СЂР°РІР°
             int lane_index = lanes[i]->getIndex();
             if (lane_index % 2 == 0)
                 rect.setFillColor(sf::Color(60, 160, 60));
@@ -279,7 +279,7 @@ void GameView::draw()
 
             window_.draw(rect);
 
-            // рисуем препятствия на траве
+            // СЂРёСЃСѓРµРј РїСЂРµРїСЏС‚СЃС‚РІРёСЏ РЅР° С‚СЂР°РІРµ
             auto* grass = dynamic_cast<GrassLane*>(lanes[i].get());
             if (grass)
             {
@@ -289,7 +289,7 @@ void GameView::draw()
                 {
                     float x = static_cast<float>(o.col) * tile;
 
-                    // если есть текстуры то рисуем ими, иначе просто зеленый квадратик
+                    // РµСЃР»Рё РµСЃС‚СЊ С‚РµРєСЃС‚СѓСЂС‹ С‚Рѕ СЂРёСЃСѓРµРј РёРјРё, РёРЅР°С‡Рµ РїСЂРѕСЃС‚Рѕ Р·РµР»РµРЅС‹Р№ РєРІР°РґСЂР°С‚РёРє
                     if (nature_textures_loaded_)
                     {
                         const sf::Texture* tex = nullptr;
@@ -309,7 +309,7 @@ void GameView::draw()
                             float tex_w = static_cast<float>(tex->getSize().x);
                             float tex_h = static_cast<float>(tex->getSize().y);
 
-                            // подгоняем текстуру под размер клетки
+                            // РїРѕРґРіРѕРЅСЏРµРј С‚РµРєСЃС‚СѓСЂСѓ РїРѕРґ СЂР°Р·РјРµСЂ РєР»РµС‚РєРё
                             s.setScale(tile / tex_w, tile / tex_h);
                             s.setPosition(x, y_lane);
 
@@ -329,7 +329,7 @@ void GameView::draw()
         }
     }
 
-    // отдельно рисуем машины поверх дороги
+    // РѕС‚РґРµР»СЊРЅРѕ СЂРёСЃСѓРµРј РјР°С€РёРЅС‹ РїРѕРІРµСЂС… РґРѕСЂРѕРіРё
     for (std::size_t i = 0; i < lanes.size(); ++i)
     {
         auto* roadLane = dynamic_cast<RoadLane*>(lanes[i].get());
@@ -350,7 +350,7 @@ void GameView::draw()
 
             if (car_textures_loaded_)
             {
-                // выбираем маленькую или большую машину по длине
+                // РІС‹Р±РёСЂР°РµРј РјР°Р»РµРЅСЊРєСѓСЋ РёР»Рё Р±РѕР»СЊС€СѓСЋ РјР°С€РёРЅСѓ РїРѕ РґР»РёРЅРµ
                 bool is_small = (car_length_cells <= 2.5f);
                 int variant = car.getSpriteVariant();
 
@@ -365,14 +365,14 @@ void GameView::draw()
                 float tex_width = static_cast<float>(tex->getSize().x);
                 float tex_height = static_cast<float>(tex->getSize().y);
 
-                // растягиваем картинку чтобы она заняла нужное число клеток
+                // СЂР°СЃС‚СЏРіРёРІР°РµРј РєР°СЂС‚РёРЅРєСѓ С‡С‚РѕР±С‹ РѕРЅР° Р·Р°РЅСЏР»Р° РЅСѓР¶РЅРѕРµ С‡РёСЃР»Рѕ РєР»РµС‚РѕРє
                 float target_width = car_length_cells * tile;
                 float target_height = tile;
 
                 float scale_x = target_width / tex_width;
                 float scale_y = target_height / tex_height;
 
-                // если направление влево то зеркалим
+                // РµСЃР»Рё РЅР°РїСЂР°РІР»РµРЅРёРµ РІР»РµРІРѕ С‚Рѕ Р·РµСЂРєР°Р»РёРј
                 if (car.getDirection() < 0)
                 {
                     sprite.setScale(-scale_x, scale_y);
@@ -388,7 +388,7 @@ void GameView::draw()
             }
             else
             {
-                // запасной вариант если текстур нет
+                // Р·Р°РїР°СЃРЅРѕР№ РІР°СЂРёР°РЅС‚ РµСЃР»Рё С‚РµРєСЃС‚СѓСЂ РЅРµС‚
                 sf::RectangleShape rect;
                 rect.setSize({ car_length_cells * tile, tile });
                 rect.setPosition(x_car, y_car);
@@ -398,7 +398,7 @@ void GameView::draw()
         }
     }
 
-    // отдельно рисуем бревна поверх воды
+    // РѕС‚РґРµР»СЊРЅРѕ СЂРёСЃСѓРµРј Р±СЂРµРІРЅР° РїРѕРІРµСЂС… РІРѕРґС‹
     for (std::size_t i = 0; i < lanes.size(); ++i)
     {
         auto* river = dynamic_cast<RiverLane*>(lanes[i].get());
@@ -423,7 +423,7 @@ void GameView::draw()
                 const sf::Texture* tex = nullptr;
                 int variant = log.getSpriteVariant();
 
-                // короткое бревно или длинное
+                // РєРѕСЂРѕС‚РєРѕРµ Р±СЂРµРІРЅРѕ РёР»Рё РґР»РёРЅРЅРѕРµ
                 if (len_cells <= 2.5f)
                     tex = &log2_texture_;
                 else
@@ -440,7 +440,7 @@ void GameView::draw()
 
                 int dir = log.getDirection();
 
-                // если едет влево зеркалим
+                // РµСЃР»Рё РµРґРµС‚ РІР»РµРІРѕ Р·РµСЂРєР°Р»РёРј
                 if (dir < 0)
                 {
                     sprite.setScale(-scale_x, scale_y);
@@ -456,7 +456,7 @@ void GameView::draw()
             }
             else
             {
-                // запасной вариант если текстур нет
+                // Р·Р°РїР°СЃРЅРѕР№ РІР°СЂРёР°РЅС‚ РµСЃР»Рё С‚РµРєСЃС‚СѓСЂ РЅРµС‚
                 sf::RectangleShape rect;
                 rect.setSize(sf::Vector2f(w_log, tile));
                 rect.setPosition(x_log, y_lane);
@@ -466,10 +466,10 @@ void GameView::draw()
         }
     }
 
-    // координаты игрока
+    // РєРѕРѕСЂРґРёРЅР°С‚С‹ РёРіСЂРѕРєР°
     const Player& p = model_.getPlayer();
 
-    // если игрок стоит на бревне, то берем абсолютную позицию чтобы он ехал вместе с ним
+    // РµСЃР»Рё РёРіСЂРѕРє СЃС‚РѕРёС‚ РЅР° Р±СЂРµРІРЅРµ, С‚Рѕ Р±РµСЂРµРј Р°Р±СЃРѕР»СЋС‚РЅСѓСЋ РїРѕР·РёС†РёСЋ С‡С‚РѕР±С‹ РѕРЅ РµС…Р°Р» РІРјРµСЃС‚Рµ СЃ РЅРёРј
     float center_x = p.isOnLog()
         ? p.getAbsX()
         : static_cast<float>(p.getCol()) + 0.5f;
@@ -480,19 +480,19 @@ void GameView::draw()
     float cx = x_player + tile * 0.5f;
     float cy = y_player + tile * 0.5f;
 
-    // текущая фаза прыжка 0..1
+    // С‚РµРєСѓС‰Р°СЏ С„Р°Р·Р° РїСЂС‹Р¶РєР° 0..1
     float jt = jump_active_ ? jump_t_ : 0.f;
 
     if (player_textures_loaded_)
     {
-        // при утоплении тень не нужна, выглядит странно
+        // РїСЂРё СѓС‚РѕРїР»РµРЅРёРё С‚РµРЅСЊ РЅРµ РЅСѓР¶РЅР°, РІС‹РіР»СЏРґРёС‚ СЃС‚СЂР°РЅРЅРѕ
         bool hide_shadow =
             (model_.getState() == GameState::GameOver) &&
             (model_.getDeathType() == DeathType::Drown);
 
         if (!hide_shadow)
         {
-            // рисуем тень первой, чтобы игрок был сверху
+            // СЂРёСЃСѓРµРј С‚РµРЅСЊ РїРµСЂРІРѕР№, С‡С‚РѕР±С‹ РёРіСЂРѕРє Р±С‹Р» СЃРІРµСЂС…Сѓ
             sf::Sprite sh;
             sh.setTexture(player_shadow_texture_);
 
@@ -508,7 +508,7 @@ void GameView::draw()
             sh.setScale(base_x * mul, base_y * mul);
             sh.setColor(sf::Color(255, 255, 255, shadow_alpha(jt)));
 
-            // тень поворачиваем так же как игрок
+            // С‚РµРЅСЊ РїРѕРІРѕСЂР°С‡РёРІР°РµРј С‚Р°Рє Р¶Рµ РєР°Рє РёРіСЂРѕРє
             float shadow_rotation_deg = 0.f;
             switch (model_.getLastJumpDir())
             {
@@ -520,7 +520,7 @@ void GameView::draw()
             }
             sh.setRotation(shadow_rotation_deg);
 
-            // небольшое смещение тени чтобы был эффект объема
+            // РЅРµР±РѕР»СЊС€РѕРµ СЃРјРµС‰РµРЅРёРµ С‚РµРЅРё С‡С‚РѕР±С‹ Р±С‹Р» СЌС„С„РµРєС‚ РѕР±СЉРµРјР°
             float dx = 0.f;
             float dy = tile * 0.18f;
 
@@ -553,7 +553,7 @@ void GameView::draw()
         }
 
         {
-            // рисуем игрока или спрайт смерти
+            // СЂРёСЃСѓРµРј РёРіСЂРѕРєР° РёР»Рё СЃРїСЂР°Р№С‚ СЃРјРµСЂС‚Рё
             bool is_game_over = (model_.getState() == GameState::GameOver);
 
             if (is_game_over && death_textures_loaded_)
@@ -568,7 +568,7 @@ void GameView::draw()
 
                 if (tex)
                 {
-                    // спрайт смерти
+                    // СЃРїСЂР°Р№С‚ СЃРјРµСЂС‚Рё
                     sf::Sprite pl;
                     pl.setTexture(*tex);
 
@@ -586,7 +586,7 @@ void GameView::draw()
                 }
                 else
                 {
-                    // если нет текстуры смерти то рисуем обычного игрока
+                    // РµСЃР»Рё РЅРµС‚ С‚РµРєСЃС‚СѓСЂС‹ СЃРјРµСЂС‚Рё С‚Рѕ СЂРёСЃСѓРµРј РѕР±С‹С‡РЅРѕРіРѕ РёРіСЂРѕРєР°
                     float rotation_deg = 0.f;
                     switch (model_.getLastJumpDir())
                     {
@@ -618,7 +618,7 @@ void GameView::draw()
             }
             else
             {
-                // обычный игрок когда игра идет
+                // РѕР±С‹С‡РЅС‹Р№ РёРіСЂРѕРє РєРѕРіРґР° РёРіСЂР° РёРґРµС‚
                 float rotation_deg = 0.f;
                 switch (model_.getLastJumpDir())
                 {
@@ -651,7 +651,7 @@ void GameView::draw()
     }
     else
     {
-        // если нет текстуры игрока рисуем желтый квадрат
+        // РµСЃР»Рё РЅРµС‚ С‚РµРєСЃС‚СѓСЂС‹ РёРіСЂРѕРєР° СЂРёСЃСѓРµРј Р¶РµР»С‚С‹Р№ РєРІР°РґСЂР°С‚
         sf::RectangleShape rect_player;
         rect_player.setSize({ tile, tile });
         rect_player.setPosition(x_player, y_player);
@@ -659,7 +659,7 @@ void GameView::draw()
         window_.draw(rect_player);
     }
 
-    // затемнение экрана и надпись при проигрыше
+    // Р·Р°С‚РµРјРЅРµРЅРёРµ СЌРєСЂР°РЅР° Рё РЅР°РґРїРёСЃСЊ РїСЂРё РїСЂРѕРёРіСЂС‹С€Рµ
     if (model_.getState() == GameState::GameOver)
     {
         sf::RectangleShape overlay;
@@ -671,17 +671,17 @@ void GameView::draw()
         window_.draw(game_over_text_);
     }
 
-    // показываем кадр
+    // РїРѕРєР°Р·С‹РІР°РµРј РєР°РґСЂ
     window_.display();
 }
 
 
-// загрузка текстур машин
+// Р·Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂ РјР°С€РёРЅ
 void GameView::loadCarTextures()
 {
     car_textures_loaded_ = true;
 
-    // маленькие машины
+    // РјР°Р»РµРЅСЊРєРёРµ РјР°С€РёРЅС‹
     for (int i = 0; i < 5; ++i)
     {
         std::string filename = "res/car_small_" + std::to_string(i) + ".png";
@@ -689,7 +689,7 @@ void GameView::loadCarTextures()
             car_textures_loaded_ = false;
     }
 
-    // большие машины
+    // Р±РѕР»СЊС€РёРµ РјР°С€РёРЅС‹
     for (int i = 0; i < 3; ++i)
     {
         std::string filename = "res/car_big_" + std::to_string(i) + ".png";
@@ -699,7 +699,7 @@ void GameView::loadCarTextures()
 }
 
 
-// загрузка текстур бревен
+// Р·Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂ Р±СЂРµРІРµРЅ
 void GameView::loadLogTextures()
 {
     log_textures_loaded_ = true;
@@ -714,7 +714,7 @@ void GameView::loadLogTextures()
 }
 
 
-// загрузка бликов на воде
+// Р·Р°РіСЂСѓР·РєР° Р±Р»РёРєРѕРІ РЅР° РІРѕРґРµ
 void GameView::loadHighlightTex()
 {
     if (!water_highlight_texture_.loadFromFile("res/water_highlight.png")) {
@@ -726,7 +726,7 @@ void GameView::loadHighlightTex()
 }
 
 
-// маленький помощник чтобы не писать одно и то же
+// РјР°Р»РµРЅСЊРєРёР№ РїРѕРјРѕС‰РЅРёРє С‡С‚РѕР±С‹ РЅРµ РїРёСЃР°С‚СЊ РѕРґРЅРѕ Рё С‚Рѕ Р¶Рµ
 static bool loadTex(sf::Texture& t, const std::string& path)
 {
     if (t.loadFromFile(path)) return true;
@@ -736,7 +736,7 @@ static bool loadTex(sf::Texture& t, const std::string& path)
 }
 
 
-// загрузка деревьев/кустов/камней
+// Р·Р°РіСЂСѓР·РєР° РґРµСЂРµРІСЊРµРІ/РєСѓСЃС‚РѕРІ/РєР°РјРЅРµР№
 void GameView::loadNatureTextures()
 {
     nature_textures_loaded_ = true;
@@ -749,13 +749,13 @@ void GameView::loadNatureTextures()
     if (!loadTex(rock_textures_[0], "res/rock_0.png")) nature_textures_loaded_ = false;
     if (!loadTex(rock_textures_[1], "res/rock_1.png")) nature_textures_loaded_ = false;
 
-    // если что то не загрузилось, выведем в консоль
+    // РµСЃР»Рё С‡С‚Рѕ С‚Рѕ РЅРµ Р·Р°РіСЂСѓР·РёР»РѕСЃСЊ, РІС‹РІРµРґРµРј РІ РєРѕРЅСЃРѕР»СЊ
     if (!nature_textures_loaded_)
         std::cerr << "[Texture] Nature textures NOT loaded.\n";
 }
 
 
-// загрузка игрока и его тени
+// Р·Р°РіСЂСѓР·РєР° РёРіСЂРѕРєР° Рё РµРіРѕ С‚РµРЅРё
 void GameView::loadPlayerTextures()
 {
     player_textures_loaded_ = true;
@@ -768,7 +768,7 @@ void GameView::loadPlayerTextures()
 }
 
 
-// загрузка текстур смерти
+// Р·Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂ СЃРјРµСЂС‚Рё
 void GameView::loadDeathTextures()
 {
     death_textures_loaded_ = true;
@@ -784,7 +784,7 @@ void GameView::loadDeathTextures()
 }
 
 
-// загрузка звуков
+// Р·Р°РіСЂСѓР·РєР° Р·РІСѓРєРѕРІ
 void GameView::loadSounds()
 {
     sounds_loaded_ = true;
@@ -798,11 +798,11 @@ void GameView::loadSounds()
     if (!sounds_loaded_)
         return;
 
-    // прыжок проигрывается один раз
+    // РїСЂС‹Р¶РѕРє РїСЂРѕРёРіСЂС‹РІР°РµС‚СЃСЏ РѕРґРёРЅ СЂР°Р·
     jump_music_.setLoop(false);
     jump_music_.setVolume(70.f);
 
-    // машины идут циклом пока есть дороги
+    // РјР°С€РёРЅС‹ РёРґСѓС‚ С†РёРєР»РѕРј РїРѕРєР° РµСЃС‚СЊ РґРѕСЂРѕРіРё
     cars_loop_music_.setLoop(true);
     cars_loop_music_.setVolume(35.f);
 }
