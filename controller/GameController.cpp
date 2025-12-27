@@ -1,6 +1,6 @@
-#include "GameController.h"
+п»ї#include "GameController.h"
 #include <SFML/Window/Event.hpp>
-// controller принимает ввод и вызывает методы model
+// controller РїСЂРёРЅРёРјР°РµС‚ РІРІРѕРґ Рё РІС‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґС‹ model
 
 
 
@@ -8,20 +8,20 @@ void GameController::processEvents()
 {
     sf::Event event;
 
-    // читаем все события из окна пока они есть
+    // С‡РёС‚Р°РµРј РІСЃРµ СЃРѕР±С‹С‚РёСЏ РёР· РѕРєРЅР° РїРѕРєР° РѕРЅРё РµСЃС‚СЊ
     while (window_.pollEvent(event))
     {
-        // закрытие окна крестиком
+        // Р·Р°РєСЂС‹С‚РёРµ РѕРєРЅР° РєСЂРµСЃС‚РёРєРѕРј
         if (event.type == sf::Event::Closed) {
             window_.close();
         }
 
-        // обработка нажатий клавиш
+        // РѕР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёР№ РєР»Р°РІРёС€
         if (event.type == sf::Event::KeyPressed)
         {
             GameState state = model_.getState();
 
-            // если проигрыш, то даем только restart по enter
+            // РµСЃР»Рё РїСЂРѕРёРіСЂС‹С€, С‚Рѕ РґР°РµРј С‚РѕР»СЊРєРѕ restart РїРѕ enter
             if (state == GameState::GameOver)
             {
                 if (event.key.code == sf::Keyboard::Enter)
@@ -29,12 +29,12 @@ void GameController::processEvents()
                     model_.restart();
                 }
 
-                // остальные кнопки в game over игнорируем
+                // РѕСЃС‚Р°Р»СЊРЅС‹Рµ РєРЅРѕРїРєРё РІ game over РёРіРЅРѕСЂРёСЂСѓРµРј
                 return;
             }
 
-            // управление игроком
-            // поддержка и стрелок и wasd
+            // СѓРїСЂР°РІР»РµРЅРёРµ РёРіСЂРѕРєРѕРј
+            // РїРѕРґРґРµСЂР¶РєР° Рё СЃС‚СЂРµР»РѕРє Рё wasd
             switch (event.key.code)
             {
             case sf::Keyboard::Up:
@@ -65,15 +65,15 @@ void GameController::processEvents()
 }
 
 
-// обновление логики игры
-// dt - время кадра в секундах
+// РѕР±РЅРѕРІР»РµРЅРёРµ Р»РѕРіРёРєРё РёРіСЂС‹
+// dt - РІСЂРµРјСЏ РєР°РґСЂР° РІ СЃРµРєСѓРЅРґР°С…
 void GameController::update(float dt)
 {
     model_.update(dt);
 }
 
 
-// отрисовка кадра через view
+// РѕС‚СЂРёСЃРѕРІРєР° РєР°РґСЂР° С‡РµСЂРµР· view
 void GameController::render()
 {
     view_.draw();
