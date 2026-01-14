@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\mifro\\Desktop\\lab3_test\\test\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{46DA01FA-FFE0-499E-A03B-28BD4B130696}|test\\test.vcxproj|C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\flat_hash_map.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{46DA01FA-FFE0-499E-A03B-28BD4B130696}|test\\test.vcxproj|solutionrelative:test\\flat_hash_map.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{46DA01FA-FFE0-499E-A03B-28BD4B130696}|test\\test.vcxproj|C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\test.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{46DA01FA-FFE0-499E-A03B-28BD4B130696}|test\\test.vcxproj|solutionrelative:test\\test.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{46DA01FA-FFE0-499E-A03B-28BD4B130696}|test\\test.vcxproj|C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\flat_hash_map_iterator.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{46DA01FA-FFE0-499E-A03B-28BD4B130696}|test\\test.vcxproj|solutionrelative:test\\flat_hash_map_iterator.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{46DA01FA-FFE0-499E-A03B-28BD4B130696}|test\\test.vcxproj|C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\pch.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{46DA01FA-FFE0-499E-A03B-28BD4B130696}|test\\test.vcxproj|solutionrelative:test\\pch.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "pch.h",
+              "DocumentMoniker": "C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\pch.h",
+              "RelativeDocumentMoniker": "test\\pch.h",
+              "ToolTip": "C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\pch.h",
+              "RelativeToolTip": "test\\pch.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-12-17T07:43:56.395Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "flat_hash_map_iterator.h",
+              "DocumentMoniker": "C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\flat_hash_map_iterator.h",
+              "RelativeDocumentMoniker": "test\\flat_hash_map_iterator.h",
+              "ToolTip": "C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\flat_hash_map_iterator.h",
+              "RelativeToolTip": "test\\flat_hash_map_iterator.h",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAkAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-12-17T07:39:18.29Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "flat_hash_map.h",
+              "DocumentMoniker": "C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\flat_hash_map.h",
+              "RelativeDocumentMoniker": "test\\flat_hash_map.h",
+              "ToolTip": "C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\flat_hash_map.h",
+              "RelativeToolTip": "test\\flat_hash_map.h",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAAL8CAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-12-17T06:35:13.21Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "test.cpp",
+              "DocumentMoniker": "C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\test.cpp",
+              "RelativeDocumentMoniker": "test\\test.cpp",
+              "ToolTip": "C:\\Users\\mifro\\Desktop\\lab3_test\\test\\test\\test.cpp",
+              "RelativeToolTip": "test\\test.cpp",
+              "ViewState": "AgIAACwBAAAAAAAAAAAAAAkAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-12-17T06:34:12.932Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
